@@ -79,6 +79,22 @@
       margin-top: 25px;
       max-width: 150px;
     }
+    .boton-visitante {
+  background-color: #a8c686;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  border-radius: 30px;
+  margin-top: 15px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.boton-visitante:hover {
+  background-color: #8ab06b;
+}
   </style>
 </head>
 <body>
@@ -91,6 +107,21 @@
     <input type="password" class="campo" placeholder="Contraseña" required>
     
     <button class="boton">Iniciar sesión</button>
+
+    <button class="boton-visitante" onclick="entrarComoInvitado()">Entrar sin registrarse</button>
+
+<script>
+function entrarComoInvitado() {
+  const confirmacion = confirm(
+    "Usted seleccionó la opción de entrar sin registrarse.\n\nPodrá ver y preguntar por los animalitos que se encuentren registrados en la página, pero para la seguridad de los animales, más adelante se le pedirán algunos datos."
+  );
+
+  if (confirmacion) {
+    // Redirigir a la página principal como visitante
+    window.location.href = "inicio.html"; // Cambia esto por tu página principal real
+  }
+}
+</script>
     
     <div class="texto-registro">
       ¿No tienes cuenta? <a href="#">Regístrate</a>
