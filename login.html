@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar Sesión - AmiPatitas</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #fdf5e6;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .contenedor {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .logo2 {
+      max-width: 180px;
+      margin-bottom: -20px;
+    }
+
+    h1 {
+      color: #5b3e2b;
+      font-size: 35px;
+      margin-bottom: 40px;
+    }
+
+    .campo {
+      background-color: #fbeacc;
+      border: none;
+      border-radius: 15px;
+      padding: 15px;
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .boton {
+      background-color: #f79675;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+
+    .boton:hover {
+      background-color: #f27550;
+    }
+
+    .texto-registro {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #5b3e2b;
+    }
+
+    .texto-registro a {
+      color: #d6704a;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .perrito {
+      margin-top: 25px;
+      max-width: 150px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <img src="logo2.png" alt="Logo2" class="logo2">
+    <h1>AmiPatitas</h1>
+    
+    <input type="email" class="campo" placeholder="Correo electrónico" required>
+    <input type="password" class="campo" placeholder="Contraseña" required>
+    
+    <button class="boton">Iniciar sesión</button>
+    
+    <div class="texto-registro">
+      ¿No tienes cuenta? <a href="#">Regístrate</a>
+    </div>
+
+    <img src="perrito.png" alt="Perrito decorativo" class="perrito">
+  </div>
+
+</body>
+</html>
