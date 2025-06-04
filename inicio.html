@@ -31,88 +31,49 @@
 
     h1 {
       color: #5b3e2b;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
 
-    p {
-      font-size: 18px;
-      color: #444;
-    }
-
-    .galeria {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    .botones {
+      display: flex;
+      flex-direction: column;
       gap: 15px;
       margin: 30px 0;
     }
 
-    .animal {
-      background-color: #fbeacc;
-      border-radius: 15px;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .animal img {
-      width: 100%;
-      border-radius: 10px;
-    }
-
-    .boton {
+    .botones a {
       background-color: #f79675;
       color: white;
-      padding: 12px 25px;
-      font-size: 16px;
-      border: none;
+      text-decoration: none;
+      padding: 15px;
       border-radius: 30px;
-      cursor: pointer;
-      margin-top: 15px;
+      font-size: 18px;
       transition: background-color 0.3s;
     }
 
-    .boton:hover {
+    .botones a:hover {
       background-color: #f27550;
     }
 
-    .redes {
+    .bienvenida-img {
       margin-top: 30px;
-      font-size: 16px;
-    }
-
-    .redes a {
-      margin: 0 10px;
-      color: #d6704a;
-      text-decoration: none;
+      max-width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-
   <div class="contenedor">
     <img src="logo.png" alt="Logo AmiPatitas" class="logo">
     <h1>Bienvenido a AmiPatitas</h1>
-    <p>Aquí puedes conocer a los animalitos que buscan un hogar lleno de amor 🐶🐱</p>
 
-    <div class="galeria">
-      <div class="animal">
-        <img src="https://placekitten.com/200/200" alt="Gatito tierno">
-        <p>Gatito rescatado</p>
-      </div>
-      <div class="animal">
-        <img src="https://placedog.net/200/200" alt="Perrito feliz">
-        <p>Perrito amigable</p>
-      </div>
-      <!-- Puedes duplicar estos bloques para más animalitos -->
+    <div class="botones">
+      <a href="ver-animales.html">Ver animales en adopción</a>
+      <a href="mascotas.html">Subir o ver fotos de mascotas</a>
     </div>
 
-    <button class="boton">Contactar por este animal</button>
-
-    <div class="redes">
-      <p>Síguenos en nuestras redes sociales:</p>
-      <a href="#" target="_blank">Facebook</a> |
-      <a href="#" target="_blank">TikTok</a>
-    </div>
+    <img src="bienvenida.jpg" alt="Imagen de bienvenida" class="bienvenida-img">
   </div>
-
 </body>
 </html>
