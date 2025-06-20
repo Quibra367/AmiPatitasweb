@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Iniciar sesión - AmiPatitas</title>
+  <title>Registro de usuario - AmiPatitas</title>
   <style>
     body {
       background-color: #fdf5e6;
@@ -18,7 +18,7 @@
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      max-width: 400px;
+      max-width: 500px;
       width: 100%;
       text-align: center;
     }
@@ -45,7 +45,7 @@
       color: #5b3e2b;
     }
 
-    input {
+    input, select {
       padding: 10px;
       border-radius: 10px;
       border: 1px solid #ccc;
@@ -67,20 +67,9 @@
       background-color: #f27550;
     }
 
-    .extra {
-      margin-top: 20px;
-      font-size: 14px;
-    }
-
-    .extra a {
-      color: #f79675;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .perrito-img {
+    .gatito-img {
       margin-top: 25px;
-      max-width: 50%;
+      max-width: 100%;
       border-radius: 15px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
@@ -88,32 +77,38 @@
 </head>
 <body>
   <div class="contenedor">
+    <!-- Logo superior -->
     <img src="logo.png" alt="Logo AmiPatitas" class="logo">
-    <h1>Iniciar sesión</h1>
+
+    <h1>Registro de Usuario - AmiPatitas
+    </h1>
 
     <form>
+      <label for="nombre">Nombre completo:</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Ej. Ana Pérez" required>
+
       <label for="correo">Correo electrónico:</label>
-      <input type="email" id="correo" name="correo" required>
+      <input type="email" id="correo" name="correo" placeholder="Ej. ana@email.com" required>
 
       <label for="contrasena">Contraseña:</label>
-      <input type="password" id="contrasena" name="contrasena" required>
+      <input type="password" id="contrasena" name="contrasena" placeholder="Mínimo 6 caracteres" required>
 
-      <button type="submit">Entrar</button>
+      <label for="telefono">Teléfono (opcional):</label>
+      <input type="tel" id="telefono" name="telefono" placeholder="Ej. 5551234567">
+
+      <label for="rol">¿Qué te interesa?</label>
+      <select id="rol" name="rol" required>
+        <option value="">Selecciona una opción</option>
+        <option value="adoptante">Adoptar animalitos</option>
+        <option value="voluntario">Ser voluntario</option>
+        <option value="visitante">Solo estoy explorando</option>
+      </select>
+
+      <button type="submit">Registrarse</button>
     </form>
 
-    <div class="extra">
-      <p>¿No tienes cuenta? <a href="registro-usuario.html">Regístrate aquí</a></p>
-      <p><a href="#" onclick="mostrarAviso()">Entrar sin registrarse</a></p>
-    </div>
-
-    <img src="perrito.png" alt="Perrito feliz" class="perrito-img">
+    <!-- Imagen animada de gatito -->
+    <img src="gatito-registro.gif" alt="Gatito feliz" class="gatito-img">
   </div>
-
-  <script>
-    function mostrarAviso() {
-      alert("Usted seleccionó entrar sin registro. Podrá ver a los animalitos y hacer preguntas, pero por seguridad, más adelante se le solicitarán sus datos.");
-      window.location.href = "inicio.html"; // Cambia a la página de inicio
-    }
-  </script>
 </body>
 </html>

@@ -6,27 +6,60 @@
   <style>
     body {
       margin: 0;
-      padding: 20px;
+      padding: 0;
       background-color: #fdf5e6;
       font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    header {
+      background-color: #f79675;
+      padding: 10px 20px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
     }
 
-    .contenedor {
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      max-width: 700px;
-      width: 100%;
-      text-align: center;
+    .logo-header {
+      max-height: 50px;
     }
 
-    .logo {
-      max-width: 150px;
-      margin-bottom: 10px;
+    .menu-toggle {
+      font-size: 28px;
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+    }
+
+    .menu {
+      max-height: 0;
+      overflow: hidden;
+      background-color: #fff0e6;
+      padding: 0 20px;
+      transition: max-height 0.4s ease;
+    }
+
+    .menu.activo {
+      max-height: 200px; /* Ajusta según número de enlaces */
+      padding: 10px 20px;
+    }
+
+    .menu a {
+      display: block;
+      padding: 10px 0;
+      text-decoration: none;
+      color: #5b3e2b;
+      font-weight: bold;
+    }
+
+    .contenedor {
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
     }
 
     h1 {
@@ -34,25 +67,37 @@
       margin-bottom: 20px;
     }
 
-    .botones {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin: 30px 0;
+    .galeria {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
     }
 
-    .botones a {
-      background-color: #f79675;
-      color: white;
-      text-decoration: none;
+    .animal-card {
+      background-color: #fbeacc;
+      border-radius: 15px;
       padding: 15px;
-      border-radius: 30px;
-      font-size: 18px;
-      transition: background-color 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: left;
     }
 
-    .botones a:hover {
-      background-color: #f27550;
+    .animal-card img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .animal-card h3 {
+      margin: 0;
+      color: #5b3e2b;
+    }
+
+    .animal-card p {
+      margin: 5px 0;
+      color: #444;
     }
 
     .bienvenida-img {
@@ -75,13 +120,46 @@
   </style>
 </head>
 <body>
+
+  <header>
+    <img src="logo.png" alt="Logo AmiPatitas" class="logo-header">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  </header>
+
+  <nav class="menu" id="menu">
+    <!-- Enlaces de ejemplo -->
+    <!-- <a href="#">Inicio</a> -->
+    <!-- <a href="#">Adoptar</a> -->
+    <!-- <a href="#">Registrar Animal</a> -->
+  </nav>
+
   <div class="contenedor">
-    <img src="logo.png" alt="Logo AmiPatitas" class="logo">
     <h1>Bienvenido a AmiPatitas</h1>
 
-    <div class="botones">
-      <a href="ver-animales.html">Ver animales en adopción</a>
-      <a href="mascotas.html">Subir o ver fotos de mascotas</a>
+    <div class="galeria">
+      <div class="animal-card">
+        <img src="perrito1.jpg" alt="Rocky">
+        <h3>Rocky</h3>
+        <p><strong>Edad:</strong> 2 años</p>
+        <p><strong>Estado:</strong> Listo para adopción</p>
+        <p>Es juguetón, muy cariñoso y se lleva bien con otros animales.</p>
+      </div>
+
+      <div class="animal-card">
+        <img src="gatito1.jpg" alt="Misu">
+        <h3>Misu</h3>
+        <p><strong>Edad:</strong> 6 meses</p>
+        <p><strong>Estado:</strong> En recuperación</p>
+        <p>Tímida al principio, muy tierna. Está recuperándose de una herida leve.</p>
+      </div>
+
+      <div class="animal-card">
+        <img src="perrito2.jpg" alt="Max">
+        <h3>Max</h3>
+        <p><strong>Edad:</strong> 1 año</p>
+        <p><strong>Estado:</strong> Listo para adopción</p>
+        <p>Muy sociable, le encanta correr y jugar con pelotas.</p>
+      </div>
     </div>
 
     <img src="bienvenida.png" alt="Imagen de bienvenida" class="bienvenida-img">
@@ -92,5 +170,12 @@
       <a href="#" target="_blank">TikTok</a>
     </div>
   </div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.classList.toggle('activo');
+    }
+  </script>
 </body>
 </html>
