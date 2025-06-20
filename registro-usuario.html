@@ -77,24 +77,21 @@
 </head>
 <body>
   <div class="contenedor">
-    <!-- Logo superior -->
     <img src="logo.png" alt="Logo AmiPatitas" class="logo">
+    <h1>Registro de Usuario</h1>
 
-    <h1>Registro de Usuario - AmiPatitas
-    </h1>
-
-    <form>
+    <form id="form-registro">
       <label for="nombre">Nombre completo:</label>
-      <input type="text" id="nombre" name="nombre" placeholder="Ej. Ana Pérez" required>
+      <input type="text" id="nombre" name="nombre" required>
 
       <label for="correo">Correo electrónico:</label>
-      <input type="email" id="correo" name="correo" placeholder="Ej. ana@email.com" required>
+      <input type="email" id="correo" name="correo" required>
 
       <label for="contrasena">Contraseña:</label>
-      <input type="password" id="contrasena" name="contrasena" placeholder="Mínimo 6 caracteres" required>
+      <input type="password" id="contrasena" name="contrasena" required>
 
       <label for="telefono">Teléfono (opcional):</label>
-      <input type="tel" id="telefono" name="telefono" placeholder="Ej. 5551234567">
+      <input type="tel" id="telefono" name="telefono">
 
       <label for="rol">¿Qué te interesa?</label>
       <select id="rol" name="rol" required>
@@ -107,8 +104,62 @@
       <button type="submit">Registrarse</button>
     </form>
 
-    <!-- Imagen animada de gatito -->
-    <img src="gatito-registro.gif" alt="Gatito feliz" class="gatito-img">
+    <img src="gatito-registro.png" alt="Gatito feliz" class="gatito-img">
   </div>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Importamos los SDKs desde URLs oficiales
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    // Tu configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4aEgzRnxjWlhtBF6gOF8jJUOiqOYr8H0",
+      authDomain: "amipatitas-576a0.firebaseapp.com",
+      databaseURL: "https://amipatitas-576a0-default-rtdb.firebaseio.com",
+      projectId: "amipatitas-576a0",
+      storageBucket: "amipatitas-576a0.firebasestorage.app",
+      messagingSenderId: "313490797976",
+      appId: "1:313490797976:web:05499b3a5b766286ae67ed",
+      measurementId: "G-LXX39MJTX9"
+    };
+
+    // Inicializamos Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // Manejo del formulario
+    const form = document.getElementById("form-registro");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const correo = document.getElementById("correo").value;
+      const contrasena = document.getElementById("contrasena").value;
+      const nombre = document.getElementById("nombre").value;
+      const telefono = document.getElementById("telefono").value;
+      const rol = document.getElementById("rol").value;
+
+      createUserWithEmailAndPassword(auth, correo, contrasena)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          set(ref(database, 'usuarios/' + user.uid), {
+            nombre: nombre,
+            correo: correo,
+            telefono: telefono,
+            rol: rol
+          });
+
+          alert("Usuario registrado exitosamente 🐾");
+          form.reset();
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
+    });
+  </script>
 </body>
 </html>
