@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agregar Animal - AmiPatitas</title>
+  <style>
+    body {
+      background-color: #fdf5e6;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .contenedor {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo {
+      max-width: 120px;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      color: #5b3e2b;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      text-align: left;
+    }
+
+    label {
+      font-weight: bold;
+      color: #5b3e2b;
+    }
+
+    input, select, textarea {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #f79675;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #f27550;
+    }
+
+    .volver {
+      margin-top: 20px;
+      display: inline-block;
+      color: #f79675;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <img src="logo.png" alt="Logo AmiPatitas" class="logo">
+    <h1>Agregar un Animal</h1>
+
+    <form id="form-animal">
+      <label for="nombre">Nombre del animal:</label>
+      <input type="text" id="nombre" required>
+
+      <label for="especie">Especie:</label>
+      <select id="especie" required>
+        <option value="">Selecciona una especie</option>
+        <option value="Perro">Perro</option>
+        <option value="Gato">Gato</option>
+        <option value="Otro">Otro</option>
+      </select>
+
+      <label for="edad">Edad:</label>
+      <input type="text" id="edad" required>
+
+      <label for="estado">Estado:</label>
+      <select id="estado" required>
+        <option value="">Selecciona estado</option>
+        <option value="Listo para adopción">Listo para adopción</option>
+        <option value="En recuperación">En recuperación</option>
+        <option value="Requiere cuidados especiales">Requiere cuidados especiales</option>
+      </select>
+
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" rows="4" required></textarea>
+
+      <label for="foto">Foto del animal:</label>
+      <input type="file" id="foto" accept="image/*" required>
+
+      <button type="submit">Guardar animalito</button>
+    </form>
+
+    <a class="volver" href="inicio.html">← Volver al inicio</a>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4aEgzRnxjWlhtBF6gOF8jJUOiqOYr8H0",
+      authDomain: "amipatitas-576a0.firebaseapp.com",
+      databaseURL: "https://amipatitas-576a0-default-rtdb.firebaseio.com",
+      projectId: "amipatitas-576a0",
+      storageBucket: "amipatitas-576a0.appspot.com",
+      messagingSenderId: "313490797976",
+      appId: "1:313490797976:web:05499b3a5b766286ae67ed",
+      measurementId: "G-LXX39MJTX9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
+
+    const form = document.getElementById("form-animal");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const nombre = document.getElementById("nombre").value;
+      const especie = document.getElementById("especie").value;
+      const edad = document.getElementById("edad").value;
+      const estado = document.getElementById("estado").value;
+      const descripcion = document.getElementById("descripcion").value;
+      const archivo = document.getElementById("foto").files[0];
+
+      if (!archivo) {
+        alert("Por favor selecciona una imagen.");
+        return;
+      }
+
+      const nombreUnico = `${Date.now()}_${archivo.name}`;
+      const ruta = sRef(storage, 'animales/' + nombreUnico);
+
+      try {
+        await uploadBytes(ruta, archivo);
+        const urlImagen = await getDownloadURL(ruta);
+
+        const nuevoAnimal = {
+          nombre,
+          especie,
+          edad,
+          estado,
+          descripcion,
+          imagen: urlImagen,
+          fecha: new Date().toISOString()
+        };
+
+        await push(ref(db, 'animales/'), nuevoAnimal);
+        alert("Animalito guardado con foto 🐾");
+        form.reset();
+      } catch (error) {
+        alert("Error al guardar: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

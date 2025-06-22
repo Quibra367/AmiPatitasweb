@@ -80,7 +80,7 @@
 
     .perrito-img {
       margin-top: 25px;
-      max-width: 50%;
+      max-width: 100%;
       border-radius: 15px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
@@ -91,7 +91,7 @@
     <img src="logo.png" alt="Logo AmiPatitas" class="logo">
     <h1>Iniciar sesión</h1>
 
-    <form>
+    <form id="form-login">
       <label for="correo">Correo electrónico:</label>
       <input type="email" id="correo" name="correo" required>
 
@@ -103,17 +103,57 @@
 
     <div class="extra">
       <p>¿No tienes cuenta? <a href="registro-usuario.html">Regístrate aquí</a></p>
-      <p><a href="#" onclick="mostrarAviso()">Entrar sin registrarse</a></p>
+      <p><a href="#" onclick="entrarSinCuenta()">Entrar sin registrarse</a></p>
     </div>
 
-    <img src="perrito.png" alt="Perrito feliz" class="perrito-img">
+    <img src="perrito-login.jpg" alt="Perrito feliz" class="perrito-img">
   </div>
 
-  <script>
-    function mostrarAviso() {
-      alert("Usted seleccionó entrar sin registro. Podrá ver a los animalitos y hacer preguntas, pero por seguridad, más adelante se le solicitarán sus datos.");
-      window.location.href = "inicio.html"; // Cambia a la página de inicio
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4aEgzRnxjWlhtBF6gOF8jJUOiqOYr8H0",
+      authDomain: "amipatitas-576a0.firebaseapp.com",
+      databaseURL: "https://amipatitas-576a0-default-rtdb.firebaseio.com",
+      projectId: "amipatitas-576a0",
+      storageBucket: "amipatitas-576a0.firebasestorage.app",
+      messagingSenderId: "313490797976",
+      appId: "1:313490797976:web:05499b3a5b766286ae67ed",
+      measurementId: "G-LXX39MJTX9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Manejo del formulario
+    const form = document.getElementById("form-login");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const correo = document.getElementById("correo").value;
+      const contrasena = document.getElementById("contrasena").value;
+
+      signInWithEmailAndPassword(auth, correo, contrasena)
+        .then((userCredential) => {
+          alert("¡Bienvenido de nuevo! 🐶");
+          window.location.href = "inicio.html"; // Redirige al inicio
+        })
+        .catch((error) => {
+          alert("Error al iniciar sesión: " + error.message);
+        });
+    });
+
+    // Entrar sin cuenta
+    function entrarSinCuenta() {
+      alert("Entraste sin registrarte. Podrás ver animalitos, pero más adelante se te pedirá tu información por seguridad.");
+      window.location.href = "inicio.html";
     }
+
+    // Exponer función
+    window.entrarSinCuenta = entrarSinCuenta;
   </script>
 </body>
 </html>

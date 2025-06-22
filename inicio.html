@@ -80,6 +80,29 @@
     .boton-cerrar:hover {
       background-color: #f27550;
     }
+
+    .boton-agregar {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: #f79675;
+      color: white;
+      font-size: 36px;
+      text-decoration: none;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: background-color 0.3s;
+      z-index: 1000;
+    }
+
+    .boton-agregar:hover {
+      background-color: #f27550;
+    }
   </style>
 </head>
 <body>
@@ -108,10 +131,13 @@
     <button class="boton-cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
 
+  <!-- Botón flotante de agregar -->
+  <a href="agregar-animal.html" class="boton-agregar" title="Agregar nuevo animal">+</a>
+
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC4aEgzRnxjWlhtBF6gOF8jJUOiqOYr8H0",
@@ -127,6 +153,15 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
+    // Verificar si el usuario está logueado
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        alert("Primero inicia sesión para acceder.");
+        window.location.href = "login.html";
+      }
+    });
+
+    // Función para cerrar sesión
     function cerrarSesion() {
       signOut(auth)
         .then(() => {
@@ -137,6 +172,9 @@
           alert("Error al cerrar sesión: " + error.message);
         });
     }
+
+    // Exponer la función
+    window.cerrarSesion = cerrarSesion;
   </script>
 </body>
 </html>
