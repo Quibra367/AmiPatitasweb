@@ -17,7 +17,7 @@
       background-color: #ffffff;
       padding: 30px;
       border-radius: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       max-width: 1000px;
       width: 100%;
       text-align: center;
@@ -110,23 +110,7 @@
     <img src="logo.png" alt="Logo AmiPatitas" class="logo">
     <h1>Bienvenido a AmiPatitas</h1>
 
-    <div class="galeria-animales">
-      <div class="animal-card">
-        <img src="perrito1.jpg" alt="Perrito">
-        <h3>Rocky</h3>
-        <p><strong>Edad:</strong> 2 años</p>
-        <p><strong>Estado:</strong> Listo para adopción</p>
-        <p>Es muy juguetón y cariñoso.</p>
-      </div>
-
-      <div class="animal-card">
-        <img src="gatito1.jpg" alt="Gatito">
-        <h3>Misu</h3>
-        <p><strong>Edad:</strong> 6 meses</p>
-        <p><strong>Estado:</strong> En recuperación</p>
-        <p>Tranquila y muy tierna. Le gusta dormir al sol.</p>
-      </div>
-    </div>
+    <div class="galeria-animales" id="galeria"></div>
 
     <button class="boton-cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
@@ -137,6 +121,7 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -144,24 +129,27 @@
       authDomain: "amipatitas-576a0.firebaseapp.com",
       databaseURL: "https://amipatitas-576a0-default-rtdb.firebaseio.com",
       projectId: "amipatitas-576a0",
-      storageBucket: "amipatitas-576a0.firebasestorage.app",
+      storageBucket: "amipatitas-576a0.appspot.com",
       messagingSenderId: "313490797976",
       appId: "1:313490797976:web:05499b3a5b766286ae67ed",
       measurementId: "G-LXX39MJTX9"
     };
 
     const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
     const auth = getAuth(app);
 
-    // Verificar si el usuario está logueado
+    // Verifica si el usuario está logueado
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         alert("Primero inicia sesión para acceder.");
         window.location.href = "login.html";
+      } else {
+        cargarAnimales();
       }
     });
 
-    // Función para cerrar sesión
+    // Cierra sesión
     function cerrarSesion() {
       signOut(auth)
         .then(() => {
@@ -173,8 +161,34 @@
         });
     }
 
-    // Exponer la función
     window.cerrarSesion = cerrarSesion;
+
+    // Carga los animales desde la base de datos
+    function cargarAnimales() {
+      const galeria = document.getElementById("galeria");
+      const refAnimales = ref(db, 'animales/');
+
+      onValue(refAnimales, (snapshot) => {
+        galeria.innerHTML = ""; // Limpiar antes de volver a cargar
+
+        snapshot.forEach((childSnapshot) => {
+          const data = childSnapshot.val();
+
+          const card = document.createElement("div");
+          card.className = "animal-card";
+
+          card.innerHTML = `
+            <img src="${data.imagen}" alt="${data.nombre}">
+            <h3>${data.nombre}</h3>
+            <p><strong>Edad:</strong> ${data.edad}</p>
+            <p><strong>Estado:</strong> ${data.estado}</p>
+            <p>${data.descripcion}</p>
+          `;
+
+          galeria.appendChild(card);
+        });
+      });
+    }
   </script>
 </body>
 </html>

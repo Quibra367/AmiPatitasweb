@@ -103,10 +103,9 @@
 
     <div class="extra">
       <p>¿No tienes cuenta? <a href="registro-usuario.html">Regístrate aquí</a></p>
-      <p><a href="#" onclick="entrarSinCuenta()">Entrar sin registrarse</a></p>
     </div>
 
-    <img src="perrito-login.jpg" alt="Perrito feliz" class="perrito-img">
+    <img src="perrito.jpg" alt="Perrito feliz" class="perrito-img">
   </div>
 
   <!-- Firebase SDK -->
@@ -119,7 +118,7 @@
       authDomain: "amipatitas-576a0.firebaseapp.com",
       databaseURL: "https://amipatitas-576a0-default-rtdb.firebaseio.com",
       projectId: "amipatitas-576a0",
-      storageBucket: "amipatitas-576a0.firebasestorage.app",
+      storageBucket: "amipatitas-576a0.appspot.com",
       messagingSenderId: "313490797976",
       appId: "1:313490797976:web:05499b3a5b766286ae67ed",
       measurementId: "G-LXX39MJTX9"
@@ -128,7 +127,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Manejo del formulario
     const form = document.getElementById("form-login");
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -139,21 +137,12 @@
       signInWithEmailAndPassword(auth, correo, contrasena)
         .then((userCredential) => {
           alert("¡Bienvenido de nuevo! 🐶");
-          window.location.href = "inicio.html"; // Redirige al inicio
+          window.location.href = "inicio.html";
         })
         .catch((error) => {
           alert("Error al iniciar sesión: " + error.message);
         });
     });
-
-    // Entrar sin cuenta
-    function entrarSinCuenta() {
-      alert("Entraste sin registrarte. Podrás ver animalitos, pero más adelante se te pedirá tu información por seguridad.");
-      window.location.href = "inicio.html";
-    }
-
-    // Exponer función
-    window.entrarSinCuenta = entrarSinCuenta;
   </script>
 </body>
 </html>
