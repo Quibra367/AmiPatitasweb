@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil de usuario - AmiPatitas</title>
+  <style>
+    body {
+      background-color: #fdf5e6;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .contenedor {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      color: #5b3e2b;
+      margin-bottom: 10px;
+    }
+
+    .usuario-id {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .galeria {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .animal {
+      background-color: #fbeacc;
+      padding: 15px;
+      border-radius: 15px;
+      text-align: left;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .animal img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .animal h3 {
+      margin: 0;
+      color: #5b3e2b;
+    }
+
+    .animal p {
+      margin: 4px 0;
+      color: #444;
+    }
+
+    .volver {
+      margin-top: 30px;
+      display: inline-block;
+      text-decoration: none;
+      color: #f79675;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Perfil del usuario</h1>
+    <div class="usuario-id" id="uid-usuario">(UID cargando...)</div>
+
+    <div class="galeria" id="galeria"></div>
+
+    <a href="inicio.html" class="volver">← Volver al inicio</a>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4aEgzRnxjWlhtBF6gOF8jJUOiqOYr8H0",
+      authDomain: "amipatitas-576a0.firebaseapp.com",
+      databaseURL: "https://amipatitas-576a0-default-rtdb.firebaseio.com",
+      projectId: "amipatitas-576a0",
+      storageBucket: "amipatitas-576a0.appspot.com",
+      messagingSenderId: "313490797976",
+      appId: "1:313490797976:web:05499b3a5b766286ae67ed",
+      measurementId: "G-LXX39MJTX9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const galeria = document.getElementById("galeria");
+    const uidUsuario = document.getElementById("uid-usuario");
+
+    // Obtener UID desde la URL
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get("uid");
+    uidUsuario.innerText = uid ? "ID del usuario: " + uid : "Usuario no especificado";
+
+    if (uid) {
+      const refAnimales = ref(db, 'animales/');
+      onValue(refAnimales, (snapshot) => {
+        galeria.innerHTML = "";
+
+        snapshot.forEach((childSnapshot) => {
+          const animal = childSnapshot.val();
+          if (animal.usuario === uid) {
+            const card = document.createElement("div");
+            card.className = "animal";
+
+            card.innerHTML = `
+              <img src="${animal.imagen}" alt="${animal.nombre}">
+              <h3>${animal.nombre}</h3>
+              <p><strong>Edad:</strong> ${animal.edad}</p>
+              <p><strong>Estado:</strong> ${animal.estado}</p>
+              <p>${animal.descripcion}</p>
+            `;
+
+            galeria.appendChild(card);
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

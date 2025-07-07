@@ -45,6 +45,7 @@
       padding: 15px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       text-align: left;
+      position: relative;
     }
 
     .animal-card img {
@@ -63,6 +64,25 @@
     .animal-card p {
       margin: 5px 0;
       color: #444;
+    }
+
+    .animal-card a, .animal-card button {
+      display: inline-block;
+      margin-top: 8px;
+      margin-right: 6px;
+      background-color: #f79675;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .animal-card a:hover, .animal-card button:hover {
+      background-color: #f27550;
     }
 
     .boton-cerrar {
@@ -115,13 +135,12 @@
     <button class="boton-cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
 
-  <!-- Botón flotante de agregar -->
   <a href="agregar-animal.html" class="boton-agregar" title="Agregar nuevo animal">+</a>
 
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -139,17 +158,21 @@
     const db = getDatabase(app);
     const auth = getAuth(app);
 
-    // Verifica si el usuario está logueado
+    let usuarioActual = null;
+
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        alert("Primero inicia sesión para acceder.");
-        window.location.href = "login.html";
+        // Esperamos un poco antes de redirigir, por si tarda en cargar
+        setTimeout(() => {
+          alert("Primero inicia sesión para acceder.");
+          window.location.href = "login.html";
+        }, 500);
       } else {
+        usuarioActual = user;
         cargarAnimales();
       }
     });
 
-    // Cierra sesión
     function cerrarSesion() {
       signOut(auth)
         .then(() => {
@@ -163,16 +186,16 @@
 
     window.cerrarSesion = cerrarSesion;
 
-    // Carga los animales desde la base de datos
     function cargarAnimales() {
       const galeria = document.getElementById("galeria");
       const refAnimales = ref(db, 'animales/');
 
       onValue(refAnimales, (snapshot) => {
-        galeria.innerHTML = ""; // Limpiar antes de volver a cargar
+        galeria.innerHTML = "";
 
         snapshot.forEach((childSnapshot) => {
           const data = childSnapshot.val();
+          const key = childSnapshot.key;
 
           const card = document.createElement("div");
           card.className = "animal-card";
@@ -183,7 +206,25 @@
             <p><strong>Edad:</strong> ${data.edad}</p>
             <p><strong>Estado:</strong> ${data.estado}</p>
             <p>${data.descripcion}</p>
+            <a href="perfil.html?uid=${data.usuario}">Ver perfil</a>
           `;
+
+          if (usuarioActual && data.usuario === usuarioActual.uid) {
+            const btnEditar = document.createElement("a");
+            btnEditar.href = `editar-animal.html?id=${key}`;
+            btnEditar.innerText = "Editar";
+
+            const btnEliminar = document.createElement("button");
+            btnEliminar.innerText = "Eliminar";
+            btnEliminar.onclick = () => {
+              if (confirm("¿Seguro que deseas eliminar este registro?")) {
+                remove(ref(db, 'animales/' + key));
+              }
+            };
+
+            card.appendChild(btnEditar);
+            card.appendChild(btnEliminar);
+          }
 
           galeria.appendChild(card);
         });

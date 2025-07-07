@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Animal - AmiPatitas</title>
+  <style>
+    body {
+      background-color: #fdf5e6;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .contenedor {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo {
+      max-width: 120px;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      color: #5b3e2b;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      text-align: left;
+    }
+
+    label {
+      font-weight: bold;
+      color: #5b3e2b;
+    }
+
+    input, select, textarea {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #f79675;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #f27550;
+    }
+
+    .volver {
+      margin-top: 20px;
+      display: inline-block;
+      color: #f79675;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <img src="logo.png" alt="Logo AmiPatitas" class="logo">
+    <h1>Editar Animalito</h1>
+
+    <form id="form-editar">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" required>
+
+      <label for="especie">Especie:</label>
+      <select id="especie" required>
+        <option value="Perro">Perro</option>
+        <option value="Gato">Gato</option>
+        <option value="Otro">Otro</option>
+      </select>
+
+      <label for="edad">Edad:</label>
+      <input type="text" id="edad" required>
+
+      <label for="estado">Estado:</label>
+      <select id="estado" required>
+        <option value="Listo para adopción">Listo para adopción</option>
+        <option value="En recuperación">En recuperación</option>
+        <option value="Requiere cuidados especiales">Requiere cuidados especiales</option>
+      </select>
+
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" rows="4" required></textarea>
+
+      <button type="submit">Guardar cambios</button>
+    </form>
+
+    <a class="volver" href="inicio.html">← Volver al inicio</a>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4aEgzRnxjWlhtBF6gOF8jJUOiqOYr8H0",
+      authDomain: "amipatitas-576a0.firebaseapp.com",
+      databaseURL: "https://amipatitas-576a0-default-rtdb.firebaseio.com",
+      projectId: "amipatitas-576a0",
+      storageBucket: "amipatitas-576a0.appspot.com",
+      messagingSenderId: "313490797976",
+      appId: "1:313490797976:web:05499b3a5b766286ae67ed",
+      measurementId: "G-LXX39MJTX9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const form = document.getElementById("form-editar");
+
+    // Obtener ID del animal desde la URL
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    if (!id) {
+      alert("No se especificó el animal a editar.");
+      window.location.href = "inicio.html";
+    }
+
+    const refAnimal = ref(db, "animales/" + id);
+
+    // Cargar datos actuales
+    get(refAnimal).then((snapshot) => {
+      if (snapshot.exists()) {
+        const animal = snapshot.val();
+        document.getElementById("nombre").value = animal.nombre;
+        document.getElementById("especie").value = animal.especie;
+        document.getElementById("edad").value = animal.edad;
+        document.getElementById("estado").value = animal.estado;
+        document.getElementById("descripcion").value = animal.descripcion;
+      } else {
+        alert("Animal no encontrado.");
+        window.location.href = "inicio.html";
+      }
+    });
+
+    // Guardar cambios
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const datosActualizados = {
+        nombre: document.getElementById("nombre").value,
+        especie: document.getElementById("especie").value,
+        edad: document.getElementById("edad").value,
+        estado: document.getElementById("estado").value,
+        descripcion: document.getElementById("descripcion").value
+      };
+
+      try {
+        await update(refAnimal, datosActualizados);
+        alert("¡Animal actualizado correctamente!");
+        window.location.href = "inicio.html";
+      } catch (error) {
+        alert("Error al actualizar: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
