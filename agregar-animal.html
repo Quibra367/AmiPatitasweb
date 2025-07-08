@@ -171,6 +171,12 @@
         return;
       }
 
+      if (archivo.size > 3 * 1024 * 1024) {
+        mensaje.innerText = "La imagen es muy grande. Máximo permitido: 3 MB.";
+        mensaje.className = "mensaje error";
+        return;
+      }
+
       const user = auth.currentUser;
       if (!user) {
         mensaje.innerText = "Debes iniciar sesión para registrar un animal.";
