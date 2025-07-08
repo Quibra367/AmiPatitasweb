@@ -142,8 +142,7 @@
       projectId: "amipatitas-576a0",
       storageBucket: "amipatitas-576a0.appspot.com",
       messagingSenderId: "313490797976",
-      appId: "1:313490797976:web:05499b3a5b766286ae67ed",
-      measurementId: "G-LXX39MJTX9"
+      appId: "1:313490797976:web:05499b3a5b766286ae67ed"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -184,33 +183,48 @@
         return;
       }
 
-      try {
-        mensaje.innerText = "Subiendo imagen...";
-        const nombreUnico = `${Date.now()}_${archivo.name}`;
-        const ruta = sRef(storage, 'animales/' + nombreUnico);
-        await uploadBytes(ruta, archivo);
-        const urlImagen = await getDownloadURL(ruta);
+      mensaje.innerText = "Obteniendo ubicación...";
 
-        mensaje.innerText = "Guardando animal...";
-        const nuevoAnimal = {
-          nombre,
-          especie,
-          edad,
-          estado,
-          descripcion,
-          imagen: urlImagen,
-          fecha: new Date().toISOString(),
-          usuario: user.uid
-        };
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
 
-        await push(ref(db, 'animales/'), nuevoAnimal);
-        mensaje.innerText = "Animalito guardado con éxito 🐾";
-        mensaje.className = "mensaje";
-        form.reset();
-      } catch (error) {
-        mensaje.innerText = "Error: " + error.message;
+        try {
+          mensaje.innerText = "Subiendo imagen...";
+          const nombreUnico = `${Date.now()}_${archivo.name}`;
+          const ruta = sRef(storage, 'animales/' + nombreUnico);
+          await uploadBytes(ruta, archivo);
+          const urlImagen = await getDownloadURL(ruta);
+
+          mensaje.innerText = "Guardando animal...";
+          const nuevoAnimal = {
+            nombre,
+            especie,
+            edad,
+            estado,
+            descripcion,
+            imagen: urlImagen,
+            fecha: new Date().toISOString(),
+            usuario: user.uid,
+            ubicacion: {
+              lat,
+              lng
+            }
+          };
+
+          await push(ref(db, 'animales/'), nuevoAnimal);
+          mensaje.innerText = "Animalito guardado con éxito 🐾";
+          mensaje.className = "mensaje";
+          form.reset();
+        } catch (error) {
+          mensaje.innerText = "Error: " + error.message;
+          mensaje.className = "mensaje error";
+        }
+
+      }, (error) => {
+        mensaje.innerText = "No se pudo obtener la ubicación. El animal será guardado sin ella.";
         mensaje.className = "mensaje error";
-      }
+      });
     });
   </script>
 </body>

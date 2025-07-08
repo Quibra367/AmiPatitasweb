@@ -66,7 +66,8 @@
       color: #444;
     }
 
-    .animal-card a, .animal-card button {
+    .animal-card a,
+    .animal-card button {
       display: inline-block;
       margin-top: 8px;
       margin-right: 6px;
@@ -81,7 +82,8 @@
       transition: background-color 0.3s;
     }
 
-    .animal-card a:hover, .animal-card button:hover {
+    .animal-card a:hover,
+    .animal-card button:hover {
       background-color: #f27550;
     }
 
@@ -137,7 +139,6 @@
 
   <a href="agregar-animal.html" class="boton-agregar" title="Agregar nuevo animal">+</a>
 
-  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -150,8 +151,7 @@
       projectId: "amipatitas-576a0",
       storageBucket: "amipatitas-576a0.appspot.com",
       messagingSenderId: "313490797976",
-      appId: "1:313490797976:web:05499b3a5b766286ae67ed",
-      measurementId: "G-LXX39MJTX9"
+      appId: "1:313490797976:web:05499b3a5b766286ae67ed"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -162,7 +162,6 @@
 
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        // Esperamos un poco antes de redirigir, por si tarda en cargar
         setTimeout(() => {
           alert("Primero inicia sesión para acceder.");
           window.location.href = "login.html";
